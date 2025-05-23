@@ -14,7 +14,7 @@ export default function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await api.post("/register", form);
+            await api.post("/api/register", form);
             navigate("/login");
         } catch (err) {
             setError("Nom d'utilisateur déjà pris");

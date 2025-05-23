@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "../styles/Profile.module.css";
 import BackgroundDecor from "../components/BackgroundDecor";
+import api from "../api/axios";
 
 export default function Profile() {
     const [profile, setProfile] = useState(null);
@@ -15,8 +16,8 @@ export default function Profile() {
             return;
         }
 
-        axios
-            .get("http://127.0.0.1:5000/profile/me", {
+        api
+            .get("/api/profile/me", {
                 headers: { Authorization: `Bearer ${token}` },
             })
             .then((res) => setProfile(res.data))
