@@ -1,0 +1,265 @@
+/* GameSetup.module.css */
+
+.setupContainer {
+    padding: 1.5rem;
+    font-family: 'Fredoka', sans-serif;
+}
+
+/* Onglets */
+.tabHeader {
+    display: flex;
+    position: relative;
+    background-color: transparent;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.tabActive {
+    background-color: rgba(214, 242, 242, 1);
+    border: 3px solid black;
+    border-bottom: none;
+    border-radius: 20px 20px 0 0;
+    padding: 0.8rem 1.2rem;
+    font-weight: bold;
+    z-index: 2;
+    position: relative;
+    flex: 1;
+}
+
+.tabInactive {
+    background-color: rgba(178, 252, 225, 0.9);
+    padding: 0.8rem 1.2rem;
+    border: 3px solid white;
+    border-bottom: black 3px solid;
+    border-radius: 20px 20px 0 0;
+    font-weight: bold;
+    z-index: 1;
+    position: relative;
+    flex: 1;
+}
+
+.tabContent {
+    background: rgba(214, 242, 242, 0.9);
+    border: 3px solid black;
+    border-radius: 0 0 20px 20px;
+    margin-top: -20px;
+    padding: 1rem;
+}
+
+/* Boutons */
+.buttonRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.modeButton {
+    padding: 0.6rem 1.2rem;
+    color: black;
+    font-size: 1.1rem;
+    border: 2px solid black;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 3px 3px 0 #ccc;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.active {
+    transform: translate(-2px, -2px);
+}
+
+/* Cartes Catégorie */
+.categoryGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.categoryCard {
+    background: white;
+    border: 2px solid black;
+    border-radius: 16px;
+    padding: 1.2rem 1rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-align: left;
+    aspect-ratio: 2 / 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: none;
+}
+
+.categoryCard:hover {
+    transform: scale(1.03);
+}
+
+.catImage {
+    display: block;
+    margin: 0 auto;
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+}
+
+.categoryCard h3 {
+    margin: 0.5rem 0 0.3rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: left;
+}
+
+.categoryCard p {
+    font-size: 0.9rem;
+    text-align: left;
+    font-weight: normal;
+    color: #333;
+}
+
+/* Couleurs de fond selon index */
+.bg0 { background-color: #B561EC !important; color: white; }
+.bg1 { background-color: #ABE6D0 !important; }
+.bg2 { background-color: #FB8CA1 !important; }
+.bg3 { background-color: #B0E0E6 !important; }
+
+/* Ombres colorées */
+.shadow0 { box-shadow: 4px 4px 0 #B561EC; }
+.shadow1 { box-shadow: 4px 4px 0 #ABE6D0; }
+.shadow2 { box-shadow: 4px 4px 0 #FB8CA1; }
+.shadow3 { box-shadow: 4px 4px 0 #B0E0E6; }
+
+.cardSelected {
+    transform: scale(1.05);
+    border: 3px solid #000;
+}
+
+.frameWrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+.frame {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150px;
+    height: 150px;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.startButtonWrapper {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.startButton {
+    width: 200px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.startButton:hover {
+    transform: scale(1.5);
+}
+
+/* Décors de fond */
+.bgStart, .bgBricks, .bgHeart {
+    position: absolute;
+    z-index: -1000;
+    pointer-events: none;
+}
+
+.bgStart {
+    top: 120px;
+    left: 220px;
+    width: 150px;
+}
+
+.bgBricks {
+    bottom: 0;
+    left: 0;
+    width: 250px;
+}
+
+.bgHeart {
+    top: 340px;
+    right: 40px;
+    width: 100px;
+}
+
+.tooltipWrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltipContainer {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltipText {
+    visibility: hidden;
+    width: 220px;
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+    padding: 0.5rem;
+    border-radius: 5px;
+    position: absolute;
+    z-index: 100;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    font-weight: normal;
+    transition: opacity 0.2s ease;
+    font-size: 0.8rem;
+    pointer-events: none;
+}
+
+.tooltipContainer:hover .tooltipText {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* === Mobile : Responsive et masquage des décors === */
+@media (max-width: 600px) {
+    /* Cacher les décors */
+    .bgStart,
+    .bgBricks,
+    .bgHeart {
+        display: none !important;
+    }
+
+    /* Grille catégories plus compacte */
+    .categoryGrid {
+        gap: 0.5rem;
+    }
+    .categoryCard {
+        padding: 0.8rem;
+    }
+
+    /* Boutons et onglets */
+    .modeButton {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+    }
+    .tabActive,
+    .tabInactive {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    /* Bouton de démarrage */
+    .startButton {
+        width: 150px;
+    }
+}

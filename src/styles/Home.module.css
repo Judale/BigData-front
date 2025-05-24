@@ -1,55 +1,154 @@
-.homeContainer {
-    background-color: transparent;
-    min-height: 100vh;
+.container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: white;
+    overflow: hidden;
     display: flex;
+    margin-top: -120px;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
-    padding: 60px 20px;
+}
+
+.logo {
+    width: 60%;
+    max-width: 900px;
+    z-index: 2;
+    margin-bottom: 2rem;
+}
+
+.tagline {
+    position: absolute;
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+    z-index: 2;
     text-align: center;
-    color: #2d2d2d; /* Charcoal */
 }
 
-.title {
-    font-size: 3rem;
-    font-weight: 700;
-    color: #c71585;
-    margin-bottom: 1rem;
-    z-index: 1;
-}
-
-.description {
-    font-size: 1.25rem;
-    margin-bottom: 2.5rem;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    line-height: 1.6;
-    z-index: 1;
-}
-
-.ctaButton {
-    background-color: #c71585;
-    color: white;
+.startButton {
+    background: url("../assets/elements/Button.svg") no-repeat center center;
+    background-size: contain;
+    width: 300px;
+    height: 80px;
     border: none;
-    border-radius: 12px;
-    padding: 12px 24px;
-    font-size: 16px;
-    font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(199, 21, 133, 0.4);
-    transition: transform 0.1s ease, background-color 0.2s ease;
-
-    max-width: 300px;
-    width: 100%;
-    margin: 0 auto;
-    display: block;
-    z-index: 1;
+    font-family: "Patrick Hand", cursive;
+    font-size: 1.4rem;
+    color: black;
+    text-align: center;
+    padding-top: 1.4rem;
+    transition: transform 0.2s ease;
+    z-index: 2;
 }
 
-.ctaButton:hover {
-    background-color: #a81270;
+.startButton:hover {
+    transform: scale(1.05);
 }
 
-.ctaButton:active {
-    transform: scale(0.97);
+/* Décors positionnés */
+.topLeft {
+    position: absolute;
+    top: 17rem;
+    left: 2rem;
+    width: 170px;
+}
+
+.topRight {
+    position: absolute;
+    top: 10rem;
+    right: -2rem;
+    width: 300px;
+}
+
+.midLeft {
+    position: absolute;
+    top: 8rem;
+    left: 15rem;
+    width: 180px;
+}
+
+.botLeft {
+    position: absolute;
+    bottom: 10rem;
+    left: 8rem;
+    width: 150px;
+}
+
+.heart {
+    position: absolute;
+    top: 12rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+}
+
+.star {
+    position: absolute;
+    bottom: 9rem;
+    right: 17rem;
+    width: 200px;
+}
+
+.arrow {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+}
+
+@media (max-width: 768px) {
+    .logo {
+        width: 90%;
+        margin-bottom: 1.5rem;
+    }
+
+    .startButton {
+        width: 220px;
+        height: 60px;
+        font-size: 1.1rem;
+        padding-top: 1.2rem;
+    }
+
+    .topLeft {
+        top: 4rem;
+        left: 1rem;
+        width: 80px;
+    }
+
+    .topRight {
+        top: 2rem;
+        right: 0;
+        width: 100px;
+    }
+
+    .midLeft {
+        top: 10rem;
+        left: 1rem;
+        width: 100px;
+    }
+
+    .botLeft {
+        bottom: 8rem;
+        left: 1rem;
+        width: 90px;
+    }
+
+    .heart {
+        top: 8rem;
+        width: 70px;
+    }
+
+    .star {
+        bottom: 8rem;
+        right: 2rem;
+        width: 100px;
+    }
+
+    .arrow {
+        width: 30px;
+    }
 }

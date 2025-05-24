@@ -1,0 +1,81 @@
+/* src/styles/Auth.module.css */
+.container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
+    border-radius: 1rem;
+    border: black solid 3px;
+    box-shadow: 10px 10px 0 black;
+    z-index: 2;
+}
+
+.title {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+.input {
+    width: 300px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+    border: 2px solid #ccc;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.input:focus {
+    border-color: #333;
+}
+
+.submitButton {
+    margin-top: 1.5rem;
+    padding: 0.6rem 1.4rem;
+    font-family: "Patrick Hand", cursive;
+    font-size: 1.1rem;
+    border: 2px solid black;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: 3px 3px 0 #FB8CA1;
+    height: 50px;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.submitButton:hover {
+    background-color: #FB8CA1;
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .input {
+        width: 200px;
+    }
+    .submitButton {
+        width: 180px;
+        height: 50px;
+        font-size: 1.1rem;
+        padding-top: 1rem;
+    }
+}
+
+.decorItem {
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+}
