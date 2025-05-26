@@ -1,0 +1,172 @@
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Patrick+Hand&display=swap");
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.8rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(5px);
+    background: rgba(255, 255, 255, 0.5);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+/* --- Titre avec logo intégré --- */
+.title {
+    position: relative;
+    width: 10rem;       /* Largeur ajustée */
+    height: 5rem;       /* Hauteur ajustée */
+    overflow: hidden;
+    font-size: 0;
+    color: transparent;
+    padding-left: 0;
+}
+
+.title::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    height: 100%;
+    background: url("../assets/Griboullon.png") no-repeat center/contain;
+}
+
+
+/* --- Liens de navigation --- */
+.links {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+/* ---- Base commune à tous les liens ---- */
+.links a {
+    font-family: "Patrick Hand", cursive;
+    font-size: 1.25rem;
+    text-decoration: none;
+    padding: 0.4rem 1rem;
+    border: 2px solid black;
+    border-radius: 12px;
+    transition: transform 0.15s ease, background-color 0.15s ease,
+    border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* ---- Chaque lien a une couleur unique ---- */
+.link0 {
+    background-color: white;
+    box-shadow: 4px 4px 0 #B561EC;
+    color: black;
+}
+
+.link0:hover,
+.link0[aria-current="page"] {
+    background-color: #B561EC;
+    color: white;
+    transform: translate(-2px, -2px);
+}
+
+.link1 {
+    background-color: white;
+    box-shadow: 4px 4px 0 #ABE6D0;
+    color: black;
+}
+
+.link1:hover,
+.link1[aria-current="page"] {
+    background-color: #ABE6D0;
+    transform: translate(-2px, -2px);
+}
+
+.link2 {
+    background-color: white;
+    box-shadow: 4px 4px 0 #FB8CA1;
+    color: black;
+}
+
+.link2:hover,
+.link2[aria-current="page"] {
+    background-color: #FB8CA1;
+    transform: translate(-2px, -2px);
+}
+
+.link3 {
+    background-color: white;
+    box-shadow: 4px 4px 0 #B0E0E6;
+    color: black;
+}
+
+.link3:hover,
+.link3[aria-current="page"] {
+    background-color: #B0E0E6;
+    transform: translate(-2px, -2px);
+}
+
+/* --- Bouton burger --- */
+.burger {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 110;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.6rem 1rem;
+    }
+
+    .title {
+        width: 7rem;
+        height: 3.5rem;
+        padding: 0;
+        margin: 0;
+    }
+
+    .title::before {
+        width: 100%;
+        height: 100%;
+    }
+
+    .burger {
+        display: block;
+        font-size: 2rem;
+        position: static; /* <- corrige l’alignement trop haut */
+        margin-left: auto;
+    }
+
+    .links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.95);
+        flex-direction: column;
+        align-items: center;
+        padding: 0.5rem 0;
+        gap: 0.4rem;
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: opacity 0.3s ease, max-height 0.3s ease;
+    }
+
+    .show {
+        opacity: 1;
+        max-height: 20rem;
+    }
+
+    .links a {
+        width: 90%;
+        text-align: center;
+        margin: 0.3rem 0;
+    }
+}
