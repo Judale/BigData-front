@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "../api";
+import api from "../api";
 import styles from "../styles/Game.module.css";
 import GameSetup from "../components/Game/GameSetup";
 import DrawingCanvas from "../components/Game/DrawingCanvas";
@@ -62,7 +62,7 @@ export default function GamePage() {
 
     const startNewGame = async () => {
         try {
-            const { data } = await axios.post<BackendStartResponse>("/api/start-game", form, {
+            const { data } = await api.post<BackendStartResponse>("/api/start-game", form, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             resetCanvas();
@@ -88,7 +88,7 @@ export default function GamePage() {
             if (!strokes) return;
 
             try {
-                const { data } = await axios.post("/api/submit-drawing", {
+                const { data } = await api.post("/api/submit-drawing", {
                     round_id: g.round_id,
                     ndjson: { drawing: strokes },
                     elapsed_time: elapsed,
@@ -120,7 +120,7 @@ export default function GamePage() {
         setTimeout(async () => {
             try {
                 // ➜ on utilise l’index courant tel quel
-                const { data } = await axios.get<{ word: string | null; round_id: number }>(
+                const { data } = await api.get<{ word: string | null; round_id: number }>(
                     `/api/next-word/${g.game_id}/${roundIdxRef.current}`
                 );
 
@@ -143,7 +143,7 @@ export default function GamePage() {
 
     const finishGame = async (gameId: number) => {
         try {
-            const { data } = await axios.post<{ total_points: number }>(
+            const { data } = await api.post<{ total_points: number }>(
                 `/api/finish-game/${gameId}`,
                 null,
                 { headers: { "X-User-ID": user_id } }

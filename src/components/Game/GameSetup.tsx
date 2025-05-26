@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styles from "../../styles/GameSetup.module.css";
-import axios from "../../api";
+import api from "../../api";
 
 const decorImages = import.meta.glob("../../assets/elements/*.{svg,png}", {
     eager: true,
@@ -17,7 +17,7 @@ export default function GameSetup({ form, setForm, onStart }: { form: any; setFo
     const [categories, setCategories] = useState<string[]>([]);
 
     useEffect(() => {
-        axios.get<{ id: number; name: string }[]>("/api/categories").then((res) => {
+        api.get<{ id: number; name: string }[]>("/api/categories").then((res) => {
             setCategories(res.data.map((c) => c.name));
         });
     }, []);

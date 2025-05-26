@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "../api";
+import api from "../api";
 import styles from "../styles/MyDrawings.module.css";
 
 type Drawing = {
@@ -18,7 +18,7 @@ export default function MyDrawings() {
     const [selectedWord, setSelectedWord] = useState<string | "all">("all");
 
     useEffect(() => {
-        axios.get("/api/drawings/final").then((res) => {
+        api.get("/api/drawings/final").then((res) => {
             setDrawings(res.data.final_drawings);
         });
     }, []);
