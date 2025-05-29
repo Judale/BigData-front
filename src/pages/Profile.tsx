@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/Profile.module.css';
 import DashboardProfile from '../components/DashboardProfile';
+import ScoreLineChart from '../components/ScoreLineChart';
 
 export default function Profile() {
     const { logout } = useAuth();
@@ -13,21 +14,20 @@ export default function Profile() {
     const [oldPwd, setOldPwd] = useState('');
     const [newPwd, setNewPwd] = useState('');
     const [msg, setMsg] = useState('');
-    const [category, setCategory] = useState('all');
-    const [difficulty, setDifficulty] = useState('all');
-    const [period, setPeriod] = useState('alltime');
+    const [difficultyFilter, setDifficultyFilter] = useState('all');
+    const [categoryFilter, setCategoryFilter] = useState('all');
+    const [periodFilter, setPeriodFilter] = useState('all');
 
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const res = await api.get('/api/profile/me');
+                const res = await api.get('/api/profile/stats');
                 setProfile(res.data);
             } catch (err) {
                 logout();
                 navigate('/login');
             }
         };
-
         fetchProfile();
     }, []);
 
@@ -52,6 +52,37 @@ export default function Profile() {
     };
 
     if (!profile) return <p className={styles.container}>Chargement...</p>;
+
+    const filteredGames = profile.games.filter((g: any) => {
+        const difficultyOk = difficultyFilter === 'all' || g.difficulty === difficultyFilter;
+        const categoryOk =
+            categoryFilter === 'all' ||
+            (Array.isArray(g.categories) && g.categories.includes(categoryFilter));
+
+        let periodOk = true;
+        if (periodFilter !== 'all') {
+            const finishedAt = new Date(g.finished_at);
+            const now = new Date();
+            if (periodFilter === 'yesterday') {
+                const yesterday = new Date(now);
+                yesterday.setDate(now.getDate() - 1);
+                periodOk =
+                    finishedAt.getDate() === yesterday.getDate() &&
+                    finishedAt.getMonth() === yesterday.getMonth() &&
+                    finishedAt.getFullYear() === yesterday.getFullYear();
+            } else if (periodFilter === 'week') {
+                const weekAgo = new Date(now);
+                weekAgo.setDate(now.getDate() - 7);
+                periodOk = finishedAt >= weekAgo && finishedAt <= now;
+            } else if (periodFilter === 'month') {
+                const monthAgo = new Date(now);
+                monthAgo.setMonth(now.getMonth() - 1);
+                periodOk = finishedAt >= monthAgo && finishedAt <= now;
+            }
+        }
+
+        return difficultyOk && categoryOk && periodOk;
+    });
 
     return (
         <div className={styles.container}>
@@ -91,23 +122,19 @@ export default function Profile() {
                 </button>
             </div>
 
-            <DashboardProfile games={profile.games} />
+            <DashboardProfile
+                games={profile.games}
+                avg_time_taken={profile.avg_time_taken}
+                total_words={profile.total_words}
+            />
 
-            {/* Filtres sous Statistiques */}
             <div className={styles.filtresContainer}>
                 <div className={styles.filtreBloc}>
-                    <label>Catégorie&nbsp;:</label>
-                    <select value={category} onChange={e => setCategory(e.target.value)}>
-                        <option value="all">Toutes</option>
-                        <option value="Animaux">Animaux</option>
-                        <option value="Nourriture">Nourriture</option>
-                        <option value="Objet">Objet</option>
-                        <option value="Test">Test</option>
-                    </select>
-                </div>
-                <div className={styles.filtreBloc}>
-                    <label>Difficulté&nbsp;:</label>
-                    <select value={difficulty} onChange={e => setDifficulty(e.target.value)}>
+                    <label>Difficulté :</label>
+                    <select
+                        value={difficultyFilter}
+                        onChange={e => setDifficultyFilter(e.target.value)}
+                    >
                         <option value="all">Toutes</option>
                         <option value="easy">Facile</option>
                         <option value="medium">Moyenne</option>
@@ -115,19 +142,55 @@ export default function Profile() {
                     </select>
                 </div>
                 <div className={styles.filtreBloc}>
-                    <label>Période&nbsp;:</label>
-                    <select value={period} onChange={e => setPeriod(e.target.value)}>
-                        <option value="alltime">Tout le temps</option>
-                        <option value="day">Dernier jour</option>
-                        <option value="week">Semaine</option>
-                        <option value="month">Mois</option>
+                    <label>Catégorie :</label>
+                    <select
+                        value={categoryFilter}
+                        onChange={e => setCategoryFilter(e.target.value)}
+                    >
+                        <option value="all">Toutes</option>
+                        <option value="Animaux">Animaux</option>
+                        <option value="Test">Test</option>
+                        <option value="Nourriture">Nourriture</option>
+                        <option value="Objet">Objet</option>
+                    </select>
+                </div>
+                <div className={styles.filtreBloc}>
+                    <label>Période :</label>
+                    <select
+                        value={periodFilter}
+                        onChange={e => setPeriodFilter(e.target.value)}
+                    >
+                        <option value="all">Toutes</option>
+                        <option value="yesterday">Hier</option>
+                        <option value="week">Dans la semaine</option>
+                        <option value="month">Dans le mois</option>
                     </select>
                 </div>
             </div>
 
+            <ScoreLineChart games={filteredGames} />
+
+            <h3>Top 5 : Tes chefs-d'œuvre</h3>
+            <ul>
+                {profile.top_words && profile.top_words.map((w: any, i: number) => (
+                    <li key={w.word}>
+                        {i + 1}. <b>{w.word}</b> — Score moyen : {w.avg_score_per_drawing}
+                    </li>
+                ))}
+            </ul>
+
+            <h3>Top 5 : Il faut s'entraîner !</h3>
+            <ul>
+                {profile.flop_words && profile.flop_words.map((w: any, i: number) => (
+                    <li key={w.word}>
+                        {i + 1}. <b>{w.word}</b> — Score moyen : {w.avg_score_per_drawing}
+                    </li>
+                ))}
+            </ul>
+
             <h3>Parties récentes :</h3>
             <ul>
-                {profile.games.map((g: any, i: number) => (
+                {filteredGames.map((g: any, i: number) => (
                     <li key={`${g.game_id}-${i}`}>
                         Partie #{g.game_id} – Score : {g.total_points}
                     </li>

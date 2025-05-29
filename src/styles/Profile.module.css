@@ -111,21 +111,24 @@ li:hover {
 .filtresContainer {
     margin: 2rem 0 1rem 0;
     display: flex;
-    gap: 2rem;
+    gap: 2.5rem;
     flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 }
 
 .filtreBloc {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     font-family: "Patrick Hand", cursive;
+    font-size: 1.1rem;
 }
 
 .filtreBloc label {
     margin-bottom: 0.3rem;
-    font-size: 1.1rem;
-    color: #B561EC;
     font-weight: bold;
+    color: #B561EC;
 }
 
 .filtreBloc select {
@@ -143,4 +146,38 @@ li:hover {
 .filtreBloc select:focus {
     border: 2px solid #B561EC;
     background: #fff;
+}
+
+.statsRow {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.statCard {
+    background: white;
+    border: 2px solid #B561EC;
+    border-radius: 14px;
+    box-shadow: 3px 3px 0 #ABE6D0;
+    padding: 1.2rem 2rem;
+    min-width: 140px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.statValue {
+    font-size: 2.1rem;
+    font-weight: bold;
+    color: #B561EC;
+    margin-bottom: 0.3rem;
+    font-family: "Patrick Hand", cursive;
+}
+
+.statLabel {
+    font-size: 1.1rem;
+    color: #222;
+    font-family: "Patrick Hand", cursive;
 }
