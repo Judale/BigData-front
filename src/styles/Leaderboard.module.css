@@ -1,0 +1,188 @@
+/* =================================================================
+   Leaderboard.module.css
+   Styles pour reproduire la maquette « podium + carte blanche ac-progress bars »
+   ================================================================= */
+
+:root {
+    --font-main: 'Patrick Hand', cursive;
+    --text-dark: #333;
+    --bg-podium-1: #4A90E2;
+    --bg-podium-2: #50E3C2;
+    --bg-podium-3: #F5A623;
+    --avatar-1: #357ABD;
+    --avatar-2: #3FB39B;
+    --avatar-3: #D38413;
+    --bar-bg: #e0e0e0;
+    --bar-fill: #4A90E2;
+    --highlight-bg: #e8f9ff;
+    --card-shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Conteneur général du composant */
+.cardContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+}
+
+/* =================================================================
+   PODIUM (top 3)
+   ================================================================= */
+
+.podiumWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 2rem;
+    padding: 1rem 0;
+    background: linear-gradient(180deg, #ffffff00 0%, #ffffff00 20%, #ffffff25 80%, #ffffff50 100%);
+}
+
+/* Chaque colonne du podium */
+.podiumItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Cercle où on peut mettre des initiales ou avatar */
+.avatarCircle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: var(--font-main);
+    font-size: 1.2rem;
+    margin-bottom: -32px; /* pour superposer partiellement sur la colonne */
+    z-index: 2;
+    box-shadow: 0 2px 6px var(--card-shadow);
+}
+
+/* Bloc vertical coloré pour chaque rang */
+.podiumColumn {
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    /* La height est injectée en inline style depuis TSX :
+       ex. style={{ height: '220px', background: 'linear-gradient(...)' }} */
+}
+
+.podiumScore {
+    color: white;
+    font-family: var(--font-main);
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.podiumName {
+    color: white;
+    font-family: var(--font-main);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.podiumRank {
+    margin-top: 0.5rem;
+    font-family: var(--font-main);
+    font-size: 0.85rem;
+    color: var(--text-dark);
+}
+
+/* =================================================================
+   CARTE BLANCHE (liste des rangs 4→10)
+   ================================================================= */
+
+.listCard {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--card-shadow);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: -1rem; /* on peut ajuster pour remonter la carte sous le podium */
+}
+
+.listTitle {
+    margin: 0;
+    font-family: var(--font-main);
+    font-size: 1.4rem;
+    text-align: center;
+    color: var(--text-dark);
+}
+
+/* Liste complète */
+.list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Chaque ligne */
+.listItem {
+    display: grid;
+    grid-template-columns: 40px 1fr 80px;
+    align-items: center;
+    column-gap: 1rem;
+    padding: 0.5rem 0;
+    position: relative;
+}
+
+/* Surligne la ligne si c’est l’utilisateur connecté */
+.highlighted {
+    background-color: var(--highlight-bg);
+    border-radius: 8px;
+}
+
+/* Rang 4→10 */
+.listRank {
+    font-family: var(--font-main);
+    font-size: 1rem;
+    color: var(--text-dark);
+    text-align: center;
+}
+
+/* Pseudo utilisateur */
+.listUser {
+    font-family: var(--font-main);
+    font-size: 1rem;
+    color: var(--text-dark);
+}
+
+/* Score pour la ligne */
+.listScore {
+    font-family: var(--font-main);
+    font-size: 1rem;
+    color: var(--text-dark);
+    text-align: right;
+}
+
+/* Barres de progression (fond gris arrondi) */
+.progressBarBackground {
+    position: absolute;
+    left: 40px;          /* aligné sous la colonne pseudo */
+    right: 0;
+    bottom: 0;
+    height: 6px;
+    background-color: var(--bar-bg);
+    border-radius: 3px;
+    margin-top: 1.8rem;  /* pour placer la barre sous le score de chaque ligne */
+}
+
+/* Remplissage de la barre (couleur vive, largeur dynamique) */
+.progressBarFill {
+    height: 100%;
+    background-color: var(--bar-fill);
+    border-radius: 3px;
+}
