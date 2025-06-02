@@ -51,7 +51,7 @@ export function Leaderboard({ data, highlightUsername }: LeaderboardProps) {
                                 className={styles.podiumColumn}
                                 style={{
                                     height: `${heights[idx]}px`,
-                                    background: `linear-gradient(180deg, ${colors[idx]} 0%, ${colors[idx]}80 100%)`,
+                                    background: `${colors[idx]}`,
                                 }}
                             >
                                 <span className={styles.podiumScore}>{row.max_points} pts</span>

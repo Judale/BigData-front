@@ -25,8 +25,76 @@
     gap: 1rem;
 }
 
-.creators li {
-    font-weight: bold;
+.creators .un {
+    width: 100%;
+    max-width: 150px;
+    padding: 0.5rem 0.8rem;
+    border: 2px solid #000;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    background-color: #ffffff;
+    box-shadow: 4px 4px 0 #FB8CA1;
+    appearance: none;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.creators .un:hover {
+    background-color: #FB8CA1;
+}
+
+.creators .deux {
+    width: 100%;
+    max-width: 150px;
+    padding: 0.5rem 0.8rem;
+    border: 2px solid #000;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    background-color: #ffffff;
+    box-shadow: 4px 4px 0 #B0E0E6;
+    appearance: none;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.creators .deux:hover {
+    background-color: #B0E0E6;
+}
+
+.creators .trois {
+    width: 100%;
+    max-width: 150px;
+    padding: 0.5rem 0.8rem;
+    border: 2px solid #000;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    background-color: #ffffff;
+    box-shadow: 4px 4px 0 #B561EC;
+    appearance: none;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.creators .trois:hover {
+    background-color: #B561EC;
+}
+
+.creators .quatre {
+    width: 100%;
+    max-width: 150px;
+    padding: 0.5rem 0.8rem;
+    border: 2px solid #000;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    background-color: #ffffff;
+    box-shadow: 4px 4px 0 #ABE6D0;
+    appearance: none;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.creators .quatre:hover {
+    background-color: #ABE6D0;
 }
 
 .heart {

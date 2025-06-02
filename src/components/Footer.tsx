@@ -6,10 +6,10 @@ export default function Footer() {
             <div className={styles.content}>
                 <p>© {new Date().getFullYear()} Gribouillon. Dessiné avec ❤️ par :</p>
                 <ul className={styles.creators}>
-                    <li>Thibault Bravar</li>
-                    <li>Rémy Georjon</li>
-                    <li>Alexis Macle</li>
-                    <li>Victor Robalo</li>
+                    <li className={styles.un}>Thibault Bravar</li>
+                    <li className={styles.deux}>Rémy Georjon</li>
+                    <li className={styles.trois}>Alexis Macle</li>
+                    <li className={styles.quatre}>Victor Robalo</li>
                 </ul>
                 <p className={styles.tagline}>Esquissez, partagez, amusez-vous !</p>
             </div>
