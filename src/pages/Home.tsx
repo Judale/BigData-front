@@ -1,14 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../api';                   // Axios préconfiguré
+import api from '../api';
 import { ChartXKCD } from '../components/ChartXKCD';
 import styles from '../styles/Home.module.css';
 import logo from '../assets/Griboullon.png';
 
-// Import du composant Leaderboard local
 import { Leaderboard } from '../components/Leaderboard';
 
-// ── Chargement des assets décoratifs (SVG/PNG) ─────────────────────────────────
 const decor = import.meta.glob('../assets/elements/*.{svg,png}', {
     eager: true,
     as: 'url'
@@ -19,12 +17,12 @@ function getAsset(name: string): string | null {
     return entry ? entry[1] : null;
 }
 
-// ── Typages des données renvoyées par /api/general-stats ────────────────────────
 interface LeaderboardEntry {
     username: string;
     sum_points: number; // cumul des points (ranking)
     max_points: number; // meilleur score sur une partie
 }
+
 interface GeneralStats {
     leaderboard: LeaderboardEntry[];
     avg_points_per_drawing: number;
@@ -35,7 +33,6 @@ interface GeneralStats {
 export default function Home() {
     const navigate = useNavigate();
 
-    // ── Scroll‐reveal pour le dashboard ─────────────────────────────────────────────
     const dashboardRef = useRef<HTMLDivElement>(null);
     const [dashboardVisible, setDashboardVisible] = useState(false);
 
@@ -55,7 +52,7 @@ export default function Home() {
         return () => observer.disconnect();
     }, []);
 
-    // ── Chargement des stats générales ───────────────────────────────────────────────
+
     const [stats, setStats] = useState<GeneralStats>({
         leaderboard: [],
         avg_points_per_drawing: 0,
@@ -84,12 +81,12 @@ export default function Home() {
             });
     }, []);
 
-    // ── Préparation du Top 10 et tri du leaderboard ─────────────────────────────────
+
     const sortedBoard = Array.isArray(stats.leaderboard)
         ? [...stats.leaderboard].sort((a, b) => b.sum_points - a.sum_points)
         : [];
 
-    // ── Définition des couleurs par catégorie ────────────────────────────────────────
+
     const categoryKeys = Object.keys(stats.avg_points_per_category);
     const COLORS: Record<string, string> = {};
     const palette = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'];
@@ -97,7 +94,7 @@ export default function Home() {
         COLORS[cat] = palette[idx % palette.length];
     });
 
-    // ── CONFIG “Moyenne par catégorie” (Bar chart) ─────────────────────────────────
+
     const avgCat = stats.avg_points_per_category;
     const hasCategories = categoryKeys.length > 0;
     const categoryConfig = {
@@ -117,7 +114,7 @@ export default function Home() {
         fontFamily: 'Patrick Hand'
     };
 
-    // ── CONFIG “Points du Top 10” (Line chart) ──────────────────────────────────────
+
     const hasLeaderboard = sortedBoard.length > 0;
     const top10ForLine = sortedBoard.slice(0, 10);
     const lineConfig = {
@@ -140,7 +137,7 @@ export default function Home() {
         fontFamily: 'Patrick Hand'
     };
 
-    // ── CONFIG “Répartition par catégorie” (Pie chart) ───────────────────────────────
+
     const gamesPerCat = stats.games_per_category;
     const catKeysForPie = Object.keys(gamesPerCat);
     const hasGamesData = catKeysForPie.length > 0;
@@ -161,7 +158,7 @@ export default function Home() {
         fontFamily: 'Patrick Hand'
     };
 
-    // ── Décors (SVG) ─────────────────────────────────────────────────────────────────
+
     const elements = [
         { name: 'Nuage.svg', style: styles.topLeft },
         { name: 'Bricks 1.svg', style: styles.midLeft },

@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from '../styles/Leaderboard.module.css';
 
 export interface LeaderboardRow {
