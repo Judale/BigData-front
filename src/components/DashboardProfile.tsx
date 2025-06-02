@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "../styles/Profile.module.css";
 
 type DashboardProfileProps = {
