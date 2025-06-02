@@ -48,7 +48,7 @@ export default function ScoreLineChart({ games }: Props) {
     };
 
     return (
-        <div style={{ maxWidth: 600, margin: "2rem auto" }}>
+        <div style={{ width: "100%", maxWidth: "1200px", margin: "2rem auto" }}>
             <h3 style={{ textAlign: "center", marginBottom: "1rem" }}>Évolution de ton score par partie</h3>
             <Line data={data} options={options} />
         </div>

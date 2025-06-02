@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from '../styles/Profile.module.css';
 import DashboardProfile from '../components/DashboardProfile';
 import ScoreLineChart from '../components/ScoreLineChart';
+import CategoryRadarChart from '../components/CategoryRadarChart';
 
 export default function Profile() {
     const { logout } = useAuth();
@@ -17,6 +18,8 @@ export default function Profile() {
     const [difficultyFilter, setDifficultyFilter] = useState('all');
     const [categoryFilter, setCategoryFilter] = useState('all');
     const [periodFilter, setPeriodFilter] = useState('all');
+    const [durationFilter, setDurationFilter] = useState('all');
+    const [radarValueType, setRadarValueType] = useState<'avg_score' | 'avg_time_taken'>('avg_score');
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -84,12 +87,18 @@ export default function Profile() {
         return difficultyOk && categoryOk && periodOk;
     });
 
+    const filteredGamesForChart = filteredGames.filter((g: any) =>
+        durationFilter === 'all' || g.duration === durationFilter
+    );
+
     return (
         <div className={styles.container}>
             <div className={styles.information}>
                 <div className={styles.utilisateur}>
                     <h2>Mon profil</h2>
-                    <p>Nom d'utilisateur : {profile.username}</p>
+                    <p style={{ fontSize: "1.2rem", fontWeight: 500 }}>
+                    Salut {profile.username} ! 👋 Bienvenue dans ta section !
+                    </p>
                     <button
                         className={styles.ProfileButton}
                         onClick={() => setShowPwdForm(!showPwdForm)}
@@ -166,36 +175,135 @@ export default function Profile() {
                         <option value="month">Dans le mois</option>
                     </select>
                 </div>
+                <div className={styles.filtreBloc}>
+                    <label>Durée :</label>
+                    <select
+                        value={durationFilter}
+                        onChange={e => setDurationFilter(e.target.value)}
+                    >
+                        <option value="all">Toutes</option>
+                        <option value="short">Courte (5 dessins)</option>
+                        <option value="medium">Moyenne (10 dessins)</option>
+                        <option value="long">Longue (15 dessins)</option>
+                    </select>
+                </div>
             </div>
 
-            <ScoreLineChart games={filteredGames} />
+            <ScoreLineChart games={filteredGamesForChart} />
 
-            <h3>Top 5 : Tes chefs-d'œuvre</h3>
-            <ul>
-                {profile.top_words && profile.top_words.map((w: any, i: number) => (
-                    <li key={w.word}>
-                        {i + 1}. <b>{w.word}</b> — Score moyen : {w.avg_score_per_drawing}
-                    </li>
-                ))}
-            </ul>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '2rem' }}>
+                <div style={{ flex: 1, maxWidth: 600 }}>
+                    <CategoryRadarChart
+                        games={profile.games}
+                        valueType={radarValueType}
+                    />
+                </div>
+                <div style={{ marginLeft: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                    <label style={{ marginBottom: 8, fontWeight: 'bold', color: '#B561EC' }}>Valeur du radar :</label>
+                    <select
+                        value={radarValueType}
+                        onChange={e => setRadarValueType(e.target.value as 'avg_score' | 'avg_time_taken')}
+                        style={{
+                            fontFamily: '"Patrick Hand", cursive',
+                            fontSize: '1.1rem',
+                            border: '2px solid #FB8CA1',
+                            borderRadius: 10,
+                            padding: '0.5rem 1rem',
+                            minWidth: 180
+                        }}
+                    >
+                        <option value="avg_score">Score moyen</option>
+                        <option value="avg_time_taken">Rapidité moyenne (s)</option>
+                    </select>
+                </div>
+            </div>
 
-            <h3>Top 5 : Il faut s'entraîner !</h3>
-            <ul>
-                {profile.flop_words && profile.flop_words.map((w: any, i: number) => (
-                    <li key={w.word}>
-                        {i + 1}. <b>{w.word}</b> — Score moyen : {w.avg_score_per_drawing}
-                    </li>
-                ))}
-            </ul>
-
-            <h3>Parties récentes :</h3>
-            <ul>
-                {filteredGames.map((g: any, i: number) => (
-                    <li key={`${g.game_id}-${i}`}>
-                        Partie #{g.game_id} – Score : {g.total_points}
-                    </li>
-                ))}
-            </ul>
+            <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center', margin: '2rem 0' }}>
+                <div style={{
+                    background: '#F7F7F7',
+                    borderRadius: 16,
+                    boxShadow: '2px 2px 8px #e0e0e0',
+                    padding: '1.5rem 2rem',
+                    minWidth: 260,
+                    flex: 1,
+                    maxWidth: 350
+                }}>
+                    <h3 style={{ color: '#4CAF50', textAlign: 'center', marginBottom: 16 }}>🏆 Top 5 : Tes chefs-d'œuvre</h3>
+                    {profile.top_words && profile.top_words.map((w: any, i: number) => (
+                        <div key={w.word} style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            marginBottom: 12,
+                            background: '#ABE6D0',
+                            borderRadius: 10,
+                            padding: '0.7rem 1rem'
+                        }}>
+                            <span style={{
+                                fontWeight: 'bold',
+                                fontSize: 22,
+                                color: '#B561EC',
+                                marginRight: 12,
+                                width: 28,
+                                textAlign: 'center'
+                            }}>{i + 1}</span>
+                            <span style={{ flex: 1, fontWeight: 500, fontSize: 18 }}>{w.word}</span>
+                            <span style={{
+                                background: '#fff',
+                                borderRadius: 8,
+                                padding: '0.2rem 0.7rem',
+                                fontWeight: 600,
+                                color: '#4CAF50',
+                                fontSize: 16,
+                                marginLeft: 10
+                            }}>
+                                {w.avg_score_per_drawing}
+                            </span>
+                        </div>
+                    ))}
+                </div>
+                <div style={{
+                    background: '#F7F7F7',
+                    borderRadius: 16,
+                    boxShadow: '2px 2px 8px #e0e0e0',
+                    padding: '1.5rem 2rem',
+                    minWidth: 260,
+                    flex: 1,
+                    maxWidth: 350
+                }}>
+                    <h3 style={{ color: '#F44336', textAlign: 'center', marginBottom: 16 }}>🤢 Top 5 : Il faut s'entraîner !</h3>
+                    {profile.flop_words && profile.flop_words.map((w: any, i: number) => (
+                        <div key={w.word} style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            marginBottom: 12,
+                            background: '#FB8CA1',
+                            borderRadius: 10,
+                            padding: '0.7rem 1rem'
+                        }}>
+                            <span style={{
+                                fontWeight: 'bold',
+                                fontSize: 22,
+                                color: '#F44336',
+                                marginRight: 12,
+                                width: 28,
+                                textAlign: 'center'
+                            }}>{i + 1}</span>
+                            <span style={{ flex: 1, fontWeight: 500, fontSize: 18 }}>{w.word}</span>
+                            <span style={{
+                                background: '#fff',
+                                borderRadius: 8,
+                                padding: '0.2rem 0.7rem',
+                                fontWeight: 600,
+                                color: '#F44336',
+                                fontSize: 16,
+                                marginLeft: 10
+                            }}>
+                                {w.avg_score_per_drawing}
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 }

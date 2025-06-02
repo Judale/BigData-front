@@ -22,13 +22,16 @@ export default function DashboardProfile({
             ? sortedScores[Math.floor(sortedScores.length / 2)]
             : (sortedScores[sortedScores.length / 2 - 1] + sortedScores[sortedScores.length / 2]) / 2)
         : 0;
+    const lastGameId = games.length
+        ? Math.max(...games.map(g => g.game_id))
+        : 0;
 
     return (
         <div style={{ marginBottom: "2rem" }}>
             <h2>Statistiques</h2>
-            <div className={styles.statsRow}>
+            <div className={styles.statsRow} style={{ justifyContent: "center" }}>
                 <div className={styles.statCard}>
-                    <div className="statValue">{nbGames}</div>
+                    <div className="statValue">{lastGameId}</div>
                     <div className="statLabel">Parties jouées</div>
                 </div>
                 <div className={styles.statCard}>
