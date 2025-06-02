@@ -170,20 +170,22 @@ export default function GamePage() {
                 const finished = data.status === "recognized" || elapsed >= 30;
                 if (finished) {
                     if (timerRef.current) clearInterval(timerRef.current);
-                    handleRoundEnd(data.status === "recognized", data.score ?? 0, g);
+
+                    const isRecognized = data.status === "recognized";
+                    const score = isRecognized ? data.score ?? 0 : 0;
+                    handleRoundEnd(isRecognized, score, g);
+
+                    return;
                 } else {
-                    // Traduction du label avant affichage
                     const motLabel = wordTranslations[data.label] ?? data.label;
                     setOverlayMsg(`Essai : ${motLabel} (${Math.round(data.proba * 100)}%)`);
                 }
-            } catch {}
-
-            if (elapsed >= 30) {
-                if (timerRef.current) clearInterval(timerRef.current);
-                handleRoundEnd(false, 0, g);
+            } catch {
             }
+
         }, 2000);
     };
+
 
     const handleRoundEnd = (success: boolean, score: number, g: BackendStartResponse) => {
         setPhase("ROUND_END");
