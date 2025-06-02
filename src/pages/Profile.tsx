@@ -54,7 +54,9 @@ export default function Profile() {
         }
     };
 
-    if (!profile) return <p className={styles.container}>Chargement...</p>;
+    if (!profile) {
+        return <p className={styles.loadingText}>Chargement...</p>;
+    }
 
     const filteredGames = profile.games.filter((g: any) => {
         const difficultyOk = difficultyFilter === 'all' || g.difficulty === difficultyFilter;
@@ -88,16 +90,17 @@ export default function Profile() {
     });
 
     const filteredGamesForChart = filteredGames.filter((g: any) =>
-        durationFilter === 'all' || g.duration === durationFilter
+        durationFilter === 'all' ? true : g.duration === durationFilter
     );
 
     return (
         <div className={styles.container}>
+            {/* Section "Mon profil" */}
             <div className={styles.information}>
                 <div className={styles.utilisateur}>
-                    <h2>Mon profil</h2>
-                    <p style={{ fontSize: "1.2rem", fontWeight: 500 }}>
-                    Salut {profile.username} ! 👋 Bienvenue dans ta section !
+                    <h2 className={styles.title}>Mon profil</h2>
+                    <p className={styles.greeting}>
+                        Salut <span className={styles.username}><strong>{profile.username}</strong></span> ! 👋 Bienvenue dans ta section !
                     </p>
                     <button
                         className={styles.ProfileButton}
@@ -108,41 +111,55 @@ export default function Profile() {
                     {showPwdForm && (
                         <form onSubmit={handlePwdChange} className={styles.pwdForm}>
                             <input
+                                className={styles.pwdInput}
                                 type="password"
                                 placeholder="Ancien mot de passe"
                                 value={oldPwd}
-                                onChange={e => setOldPwd(e.target.value)}
+                                onChange={(e) => setOldPwd(e.target.value)}
                                 required
                             />
                             <input
+                                className={styles.pwdInput}
                                 type="password"
                                 placeholder="Nouveau mot de passe"
                                 value={newPwd}
-                                onChange={e => setNewPwd(e.target.value)}
+                                onChange={(e) => setNewPwd(e.target.value)}
                                 required
                             />
-                            <button type="submit">Valider</button>
+                            <button type="submit" className={styles.pwdSubmit}>
+                                Valider
+                            </button>
                         </form>
                     )}
-                    {msg && <p>{msg}</p>}
+                    {msg && <p className={styles.msg}>{msg}</p>}
                 </div>
-                <button className={styles.ProfileButton} onClick={() => { logout(); navigate('/login'); }}>
+                <button
+                    className={styles.ProfileButton}
+                    onClick={() => {
+                        logout();
+                        navigate('/login');
+                    }}
+                >
                     Se déconnecter
                 </button>
             </div>
 
+            {/* Statistiques générales */}
             <DashboardProfile
                 games={profile.games}
                 avg_time_taken={profile.avg_time_taken}
                 total_words={profile.total_words}
             />
 
+            {/* Filtres */}
             <div className={styles.filtresContainer}>
                 <div className={styles.filtreBloc}>
-                    <label>Difficulté :</label>
+                    <label htmlFor="difficulty">Difficulté :</label>
                     <select
+                        id="difficulty"
+                        className={styles.select1}
                         value={difficultyFilter}
-                        onChange={e => setDifficultyFilter(e.target.value)}
+                        onChange={(e) => setDifficultyFilter(e.target.value)}
                     >
                         <option value="all">Toutes</option>
                         <option value="easy">Facile</option>
@@ -150,11 +167,14 @@ export default function Profile() {
                         <option value="hard">Difficile</option>
                     </select>
                 </div>
+
                 <div className={styles.filtreBloc}>
-                    <label>Catégorie :</label>
+                    <label htmlFor="category">Catégorie :</label>
                     <select
+                        id="category"
+                        className={styles.select2}
                         value={categoryFilter}
-                        onChange={e => setCategoryFilter(e.target.value)}
+                        onChange={(e) => setCategoryFilter(e.target.value)}
                     >
                         <option value="all">Toutes</option>
                         <option value="Animaux">Animaux</option>
@@ -163,11 +183,14 @@ export default function Profile() {
                         <option value="Objet">Objet</option>
                     </select>
                 </div>
+
                 <div className={styles.filtreBloc}>
-                    <label>Période :</label>
+                    <label htmlFor="period">Période :</label>
                     <select
+                        id="period"
+                        className={styles.select3}
                         value={periodFilter}
-                        onChange={e => setPeriodFilter(e.target.value)}
+                        onChange={(e) => setPeriodFilter(e.target.value)}
                     >
                         <option value="all">Toutes</option>
                         <option value="yesterday">Hier</option>
@@ -175,11 +198,14 @@ export default function Profile() {
                         <option value="month">Dans le mois</option>
                     </select>
                 </div>
+
                 <div className={styles.filtreBloc}>
-                    <label>Durée :</label>
+                    <label htmlFor="duration">Durée :</label>
                     <select
+                        id="duration"
+                        className={styles.select4}
                         value={durationFilter}
-                        onChange={e => setDurationFilter(e.target.value)}
+                        onChange={(e) => setDurationFilter(e.target.value)}
                     >
                         <option value="all">Toutes</option>
                         <option value="short">Courte (5 dessins)</option>
@@ -189,28 +215,29 @@ export default function Profile() {
                 </div>
             </div>
 
+            {/* Graphique en ligne (score par partie) */}
             <ScoreLineChart games={filteredGamesForChart} />
 
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '2rem' }}>
-                <div style={{ flex: 1, maxWidth: 600 }}>
+            {/* Section Radar + contrôle */}
+            <div className={styles.radarSection}>
+                <div className={styles.radarWrapper}>
                     <CategoryRadarChart
                         games={profile.games}
                         valueType={radarValueType}
                     />
                 </div>
-                <div style={{ marginLeft: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                    <label style={{ marginBottom: 8, fontWeight: 'bold', color: '#B561EC' }}>Valeur du radar :</label>
+
+                <div className={styles.radarControl}>
+                    <label htmlFor="radarValue" className={styles.radarLabel}>
+                        Valeur du radar :
+                    </label>
                     <select
+                        id="radarValue"
+                        className={styles.select1}
                         value={radarValueType}
-                        onChange={e => setRadarValueType(e.target.value as 'avg_score' | 'avg_time_taken')}
-                        style={{
-                            fontFamily: '"Patrick Hand", cursive',
-                            fontSize: '1.1rem',
-                            border: '2px solid #FB8CA1',
-                            borderRadius: 10,
-                            padding: '0.5rem 1rem',
-                            minWidth: 180
-                        }}
+                        onChange={(e) =>
+                            setRadarValueType(e.target.value as 'avg_score' | 'avg_time_taken')
+                        }
                     >
                         <option value="avg_score">Score moyen</option>
                         <option value="avg_time_taken">Rapidité moyenne (s)</option>
@@ -218,90 +245,32 @@ export default function Profile() {
                 </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center', margin: '2rem 0' }}>
-                <div style={{
-                    background: '#F7F7F7',
-                    borderRadius: 16,
-                    boxShadow: '2px 2px 8px #e0e0e0',
-                    padding: '1.5rem 2rem',
-                    minWidth: 260,
-                    flex: 1,
-                    maxWidth: 350
-                }}>
-                    <h3 style={{ color: '#4CAF50', textAlign: 'center', marginBottom: 16 }}>🏆 Top 5 : Tes chefs-d'œuvre</h3>
-                    {profile.top_words && profile.top_words.map((w: any, i: number) => (
-                        <div key={w.word} style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            marginBottom: 12,
-                            background: '#ABE6D0',
-                            borderRadius: 10,
-                            padding: '0.7rem 1rem'
-                        }}>
-                            <span style={{
-                                fontWeight: 'bold',
-                                fontSize: 22,
-                                color: '#B561EC',
-                                marginRight: 12,
-                                width: 28,
-                                textAlign: 'center'
-                            }}>{i + 1}</span>
-                            <span style={{ flex: 1, fontWeight: 500, fontSize: 18 }}>{w.word}</span>
-                            <span style={{
-                                background: '#fff',
-                                borderRadius: 8,
-                                padding: '0.2rem 0.7rem',
-                                fontWeight: 600,
-                                color: '#4CAF50',
-                                fontSize: 16,
-                                marginLeft: 10
-                            }}>
-                                {w.avg_score_per_drawing}
-                            </span>
-                        </div>
-                    ))}
+            {/* Top 5 / Flop 5 mots */}
+            <div className={styles.topWordsContainer}>
+                <div className={styles.topWordsCard}>
+                    <h3 className={styles.topWordsTitle}>Top 5 : Tes chefs‐d'œuvre</h3>
+                    <div className={styles.wordsListTop}>
+                        {profile.top_words?.map((w: any, i: number) => (
+                            <div key={w.word} className={styles.wordsItem}>
+                                <span className={styles.wordsRank}>{i + 1}</span>
+                                <span className={styles.wordsWord}>{w.word}</span>
+                                <span className={styles.wordsScore}>{w.avg_score_per_drawing}</span>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-                <div style={{
-                    background: '#F7F7F7',
-                    borderRadius: 16,
-                    boxShadow: '2px 2px 8px #e0e0e0',
-                    padding: '1.5rem 2rem',
-                    minWidth: 260,
-                    flex: 1,
-                    maxWidth: 350
-                }}>
-                    <h3 style={{ color: '#F44336', textAlign: 'center', marginBottom: 16 }}>🤢 Top 5 : Il faut s'entraîner !</h3>
-                    {profile.flop_words && profile.flop_words.map((w: any, i: number) => (
-                        <div key={w.word} style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            marginBottom: 12,
-                            background: '#FB8CA1',
-                            borderRadius: 10,
-                            padding: '0.7rem 1rem'
-                        }}>
-                            <span style={{
-                                fontWeight: 'bold',
-                                fontSize: 22,
-                                color: '#F44336',
-                                marginRight: 12,
-                                width: 28,
-                                textAlign: 'center'
-                            }}>{i + 1}</span>
-                            <span style={{ flex: 1, fontWeight: 500, fontSize: 18 }}>{w.word}</span>
-                            <span style={{
-                                background: '#fff',
-                                borderRadius: 8,
-                                padding: '0.2rem 0.7rem',
-                                fontWeight: 600,
-                                color: '#F44336',
-                                fontSize: 16,
-                                marginLeft: 10
-                            }}>
-                                {w.avg_score_per_drawing}
-                            </span>
-                        </div>
-                    ))}
+
+                <div className={styles.topWordsCard}>
+                    <h3 className={styles.flopWordsTitle}>Flop 5 : Il faut s'entraîner !</h3>
+                    <div className={styles.wordsListFlop}>
+                        {profile.flop_words?.map((w: any, i: number) => (
+                            <div key={w.word} className={styles.wordsItem}>
+                                <span className={styles.wordsRank}>{i + 1}</span>
+                                <span className={styles.wordsWord}>{w.word}</span>
+                                <span className={styles.wordsScore}>{w.avg_score_per_drawing}</span>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

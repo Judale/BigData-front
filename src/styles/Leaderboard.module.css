@@ -36,7 +36,6 @@
     align-items: flex-end;
     gap: 2rem;
     padding: 1rem 0;
-    background: linear-gradient(180deg, #ffffff00 0%, #ffffff00 20%, #ffffff25 80%, #ffffff50 100%);
 }
 
 /* Chaque colonne du podium */

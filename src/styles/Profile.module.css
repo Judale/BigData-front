@@ -1,184 +1,386 @@
-@import url("https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Patrick+Hand&display=swap");
 
-.container {
-    padding: 2rem;
-    font-family: "Patrick Hand", cursive;
-    color: black;
+:root {
+    --text-dark: #222222;
+    --background-page: #F7F7F7;
+    --font-sans: 'Fredoka', sans-serif;
+    --font-hand: 'Patrick Hand', cursive;
+
+    /* Couleurs pour Top 5 / Flop 5 (idée : on peut garder du vert/rouge) */
+    --success-green: #4CAF50;
+    --error-red: #F44336;
 }
 
-h2, h3 {
-    font-size: 1.8rem;
+/* ------------------------- Conteneur général ------------------------- */
+.container {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    font-family: var(--font-sans);
+    color: var(--text-dark);
+    align-items: center;
+}
+
+/* Texte “Chargement...” */
+.loadingText {
+    font-family: var(--font-hand);
+    font-size: 1.2rem;
+    font-style: italic;
+    margin-top: 3rem;
+    color: var(--text-dark);
+}
+
+/* ------------------ Section “Mon profil” + boutons ------------------ */
+.information {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    width: 80%;
+}
+
+.utilisateur {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    font-family: var(--font-hand);
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+}
+
+.greeting {
+    font-size: 1.2rem;
+    font-weight: 500;
     margin-bottom: 1rem;
 }
 
-p {
-    font-size: 1.2rem;
-    margin: 0.4rem 0;
+.greeting strong{
+    font-weight: bold;
+    color: #FB8CA1;
 }
 
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-li {
-    background: white;
-    border: 2px solid black;
-    border-radius: 12px;
-    margin-bottom: 0.8rem;
-    padding: 0.6rem 1rem;
-    box-shadow: 3px 3px 0 #ABE6D0;
-    transition: transform 0.15s ease;
-}
-
-li:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 3px 3px 0 #FB8CA1;
-}
-
+/* Boutons “Modifier mot de passe” et “Se déconnecter” */
 .ProfileButton {
-    margin-top: 1.5rem;
-    padding: 0.6rem 1.4rem;
-    font-family: "Patrick Hand", cursive;
-    font-size: 1.1rem;
-    border: 2px solid black;
+    font-family: var(--font-hand);
+    font-size: 1rem;
+    text-decoration: none;
+    background-color: #ffffff;
+    color: var(--text-dark);
+    border: 2px solid #000;
     border-radius: 12px;
-    background-color: white;
-    box-shadow: 3px 3px 0 #B561EC;
-    height: 50px;
+    padding: 0.6rem 1.2rem;
+    box-shadow: 4px 4px 0 #FB8CA1;
     cursor: pointer;
-    transition: transform 0.15s ease;
+    transition: transform 0.15s ease, background-color 0.15s ease,
+    border-color 0.15s ease, box-shadow 0.15s ease;
+    margin: 1.5rem;
 }
 
 .ProfileButton:hover {
     background-color: #FB8CA1;
-    transform: scale(1.05);
+    transform: translate(-2px, -2px);
 }
 
-.information{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+.ProfileButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
+/* Formulaire changement de mot de passe */
 .pwdForm {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    margin: 1.2rem 0;
-    padding: 1.2rem 1.5rem;
-    background: #fff;
-    border: 2px solid #B561EC;
-    border-radius: 14px;
-    box-shadow: 3px 3px 0 #ABE6D0;
-    max-width: 350px;
-}
-
-.pwdForm input[type="password"] {
-    font-family: "Patrick Hand", cursive;
-    font-size: 1.1rem;
-    padding: 0.6rem 1rem;
-    border: 2px solid #FB8CA1;
-    border-radius: 10px;
-    background: #F7F7F7;
-    outline: none;
-    transition: border 0.2s;
-}
-
-.pwdForm input[type="password"]:focus {
-    border: 2px solid #B561EC;
-    background: #fff;
-}
-
-.pwdForm button[type="submit"] {
-    margin-top: 0.5rem;
-    padding: 0.6rem 1.4rem;
-    font-family: "Patrick Hand", cursive;
-    font-size: 1.1rem;
-    border: 2px solid #B561EC;
-    border-radius: 12px;
-    background-color: #fff;
-    box-shadow: 3px 3px 0 #FB8CA1;
-    cursor: pointer;
-    transition: background 0.15s, transform 0.15s;
-}
-
-.pwdForm button[type="submit"]:hover {
-    background-color: #ABE6D0;
-    transform: scale(1.05);
-}
-
-.filtresContainer {
-    margin: 2rem 0 1rem 0;
-    display: flex;
-    gap: 2.5rem;
-    flex-wrap: wrap;
-    justify-content: center;
     align-items: center;
+    gap: 0.8rem;
+    margin-top: 1rem;
+    width: 100%;
+}
+
+.pwdInput {
+    width: 100%;
+    max-width: 400px;
+    padding: 0.6rem;
+    border: 2px solid #000;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: var(--font-sans);
+}
+
+.pwdSubmit {
+    font-family: var(--font-hand);
+    font-size: 1rem;
+    background-color: #ffffff;
+    color: var(--text-dark);
+    border: 2px solid #000;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    box-shadow: 4px 4px 0 #000;
+    cursor: pointer;
+    transition: none;
+}
+
+/* Message d’erreur / succès sous le formulaire */
+.msg {
+    margin-top: 0.8rem;
+    color: var(--error-red);
+    font-family: var(--font-hand);
+    font-size: 1rem;
+}
+
+/* ----------------------- Conteneur des filtres ----------------------- */
+.filtresContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin: 2rem 0;
+    width: 100%;
+    max-width: 800px;
 }
 
 .filtreBloc {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    font-family: "Patrick Hand", cursive;
-    font-size: 1.1rem;
 }
 
 .filtreBloc label {
-    margin-bottom: 0.3rem;
     font-weight: bold;
-    color: #B561EC;
+    margin-bottom: 0.3rem;
+    font-family: var(--font-hand);
 }
 
-.filtreBloc select {
-    font-family: "Patrick Hand", cursive;
-    font-size: 1.1rem;
-    padding: 0.5rem 1rem;
-    border: 2px solid #FB8CA1;
-    border-radius: 10px;
-    background: #F7F7F7;
-    outline: none;
-    transition: border 0.2s;
-    box-shadow: 2px 2px 0 #ABE6D0;
+.select {
+    width: 100%;
+    max-width: 200px;
+    padding: 0.5rem 0.8rem;
+    border: 2px solid #000;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    background-color: #ffffff;
+    box-shadow: 4px 4px 0 #000;
+    appearance: none;
+    cursor: pointer;
+    transition: none;
 }
 
-.filtreBloc select:focus {
-    border: 2px solid #B561EC;
-    background: #fff;
+.select1 {
+    width: 100%;
+    max-width: 200px;
+    padding: 0.5rem 0.8rem;
+    border: 2px solid #000;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    background-color: #ffffff;
+    box-shadow: 4px 4px 0 #B561EC;
+    appearance: none;
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
-.statsRow {
+.select1:hover {
+    background-color: #B561EC;
+}
+
+.select2 {
+    width: 100%;
+    max-width: 200px;
+    padding: 0.5rem 0.8rem;
+    border: 2px solid #000;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    background-color: #ffffff;
+    box-shadow: 4px 4px 0 #ABE6D0;
+    appearance: none;
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.select2:hover {
+    background-color: #ABE6D0;
+}
+
+.select3 {
+    width: 100%;
+    max-width: 200px;
+    padding: 0.5rem 0.8rem;
+    border: 2px solid #000;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    background-color: #ffffff;
+    box-shadow: 4px 4px 0 #FB8CA1;
+    appearance: none;
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.select3:hover {
+    background-color: #FB8CA1;
+}
+
+.select4 {
+    width: 100%;
+    max-width: 200px;
+    padding: 0.5rem 0.8rem;
+    border: 2px solid #000;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    background-color: #ffffff;
+    box-shadow: 4px 4px 0 #B0E0E6;
+    appearance: none;
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.select4:hover {
+    background-color: #B0E0E6;
+}
+
+/* -------------------- Section Radar + Contrôle -------------------- */
+.radarSection {
     display: flex;
-    gap: 2rem;
     flex-wrap: wrap;
-    margin-bottom: 1.5rem;
+    gap: 2rem;
     justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    width: 100%;
 }
 
-.statCard {
-    background: white;
-    border: 2px solid #B561EC;
-    border-radius: 14px;
-    box-shadow: 3px 3px 0 #ABE6D0;
-    padding: 1.2rem 2rem;
-    min-width: 140px;
-    text-align: center;
+.radarWrapper {
+    flex: 1;
+    min-width: 300px;
+    max-width: 600px;
+}
+
+.radarControl {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
 }
 
-.statValue {
-    font-size: 2.1rem;
+.radarLabel {
     font-weight: bold;
-    color: #B561EC;
-    margin-bottom: 0.3rem;
-    font-family: "Patrick Hand", cursive;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+    font-family: var(--font-hand);
 }
 
-.statLabel {
-    font-size: 1.1rem;
-    color: #222;
-    font-family: "Patrick Hand", cursive;
+/* -------------------- Top 5 / Flop 5 Mots -------------------- */
+.topWordsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    margin: 2rem 0;
+    width: 100%;
+}
+
+.topWordsCard {
+    background: #ffffff;
+    border: 2px solid #000;
+    border-radius: 16px;
+    box-shadow: 4px 4px 0 #000;
+    padding: 1.5rem 2rem;
+    min-width: 260px;
+    flex: 1;
+    max-width: 350px;
+}
+
+.topWordsTitle {
+    font-family: var(--font-hand);
+    color: var(--success-green);
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.flopWordsTitle {
+    font-family: var(--font-hand);
+    color: var(--error-red);
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.wordsListTop {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.wordsListFlop {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.wordsRank {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-right: 0.8rem;
+    width: 28px;
+    text-align: center;
+    color: var(--error-red);
+}
+
+.wordsWord {
+    flex: 1;
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--text-dark);
+}
+
+.wordsListTop .wordsScore {
+    background: #ABE6D0;
+    border: 2px solid #000;
+    border-radius: 8px;
+    box-shadow: 4px 4px 0 #000;
+    padding: 0.2rem 0.7rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--success-green);
+    margin-left: 0.8rem;
+}
+
+.wordsListFlop .wordsScore {
+    background: #FB8CA1;
+    border: 2px solid #000;
+    border-radius: 8px;
+    box-shadow: 4px 4px 0 #000;
+    padding: 0.2rem 0.7rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--error-red);
+    margin-left: 0.8rem;
+}
+
+.wordsListTop .wordsItem {
+    display: flex;
+    align-items: center;
+    background: #e9fff4;
+    border: 2px solid #000;
+    border-radius: 10px;
+    box-shadow: 4px 4px 0 #000;
+    padding: 0.7rem 1rem;
+}
+
+.wordsListFlop .wordsItem {
+    display: flex;
+    align-items: center;
+    background: #fcd5dc;
+    border: 2px solid #000;
+    border-radius: 10px;
+    box-shadow: 4px 4px 0 #000;
+    padding: 0.7rem 1rem;
 }

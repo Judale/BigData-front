@@ -1,4 +1,4 @@
-import { Radar } from "react-chartjs-2";
+import { Radar } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
     RadialLinearScale,
@@ -7,28 +7,40 @@ import {
     Filler,
     Tooltip,
     Legend,
-} from "chart.js";
+} from 'chart.js';
+import styles from '../styles/CategoryRadarChart.module.css';
 
-ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
+ChartJS.register(
+    RadialLinearScale,
+    PointElement,
+    LineElement,
+    Filler,
+    Tooltip,
+    Legend
+);
 
 const DIFFICULTIES = [
-    { key: "easy", label: "Facile", color: "#4CAF50" },    // Vert
-    { key: "medium", label: "Moyenne", color: "#FF9800" }, // Orange
-    { key: "hard", label: "Difficile", color: "#F44336" }, // Rouge
+    { key: 'easy', label: 'Facile', color: '#4CAF50' },
+    { key: 'medium', label: 'Moyenne', color: '#FF9800' },
+    { key: 'hard', label: 'Difficile', color: '#F44336' },
 ];
 
 type Props = {
     games: any[];
-    valueType: "avg_score" | "avg_time_taken";
+    valueType: 'avg_score' | 'avg_time_taken';
 };
 
-export default function CategoryRadarChart({ games, valueType }: Props) {
-    // Récupère toutes les catégories présentes dans les parties
+export default function CategoryRadarChart({
+                                               games,
+                                               valueType,
+                                           }: Props) {
     const categoriesSet = new Set<string>();
-    games.forEach((g) => Array.isArray(g.categories) && g.categories.forEach((cat: string) => categoriesSet.add(cat)));
+    games.forEach((g) =>
+        Array.isArray(g.categories) &&
+        g.categories.forEach((cat: string) => categoriesSet.add(cat))
+    );
     const categories = Array.from(categoriesSet);
 
-    // Pour chaque difficulté, calcule le score moyen par catégorie
     const datasets = DIFFICULTIES.map((diff) => {
         const data = categories.map((cat) => {
             const gamesForCatDiff = games.filter(
@@ -38,22 +50,26 @@ export default function CategoryRadarChart({ games, valueType }: Props) {
                     g.difficulty === diff.key
             );
             if (!gamesForCatDiff.length) return 0;
-            if (valueType === "avg_score") {
+            if (valueType === 'avg_score') {
                 const avg =
-                    gamesForCatDiff.reduce((sum: number, g: any) => sum + g.total_points, 0) /
-                    gamesForCatDiff.length;
+                    gamesForCatDiff.reduce(
+                        (sum: number, g: any) => sum + g.total_points,
+                        0
+                    ) / gamesForCatDiff.length;
                 return Math.round(avg * 100) / 100;
             } else {
                 const avg =
-                    gamesForCatDiff.reduce((sum: number, g: any) => sum + (g.avg_time_taken ?? 0), 0) /
-                    gamesForCatDiff.length;
+                    gamesForCatDiff.reduce(
+                        (sum: number, g: any) => sum + (g.avg_time_taken ?? 0),
+                        0
+                    ) / gamesForCatDiff.length;
                 return Math.round(avg * 100) / 100;
             }
         });
         return {
             label: diff.label,
             data,
-            backgroundColor: diff.color + "33",
+            backgroundColor: diff.color + '33',
             borderColor: diff.color,
             borderWidth: 2,
             pointBackgroundColor: diff.color,
@@ -68,31 +84,36 @@ export default function CategoryRadarChart({ games, valueType }: Props) {
     const options = {
         responsive: true,
         plugins: {
-            legend: { position: "top" as const },
+            legend: {
+                position: 'top' as const,
+                labels: {
+                    font: { family: '"Patrick Hand", cursive', size: 14 },
+                },
+            },
             tooltip: { enabled: true },
         },
         scales: {
             r: {
                 angleLines: { display: true },
                 suggestedMin: 0,
-                suggestedMax: valueType === "avg_score" ? 500 : undefined,
+                suggestedMax: valueType === 'avg_score' ? 500 : undefined,
                 pointLabels: {
-                    font: { size: 16, family: "Patrick Hand, cursive" },
+                    font: { size: 16, family: '"Patrick Hand", cursive' },
                 },
                 ticks: {
-                    font: { size: 14, family: "Patrick Hand, cursive" },
-                    stepSize: valueType === "avg_score" ? 50 : 1,
+                    font: { size: 14, family: '"Patrick Hand", cursive' },
+                    stepSize: valueType === 'avg_score' ? 50 : 1,
                 },
             },
         },
     };
 
     return (
-        <div style={{ maxWidth: 600, margin: "2rem auto" }}>
-            <h3 style={{ textAlign: "center", marginBottom: "1rem" }}>
-                {valueType === "avg_score"
-                    ? "Score moyen par catégorie et difficulté"
-                    : "Rapidité moyenne (s) par catégorie et difficulté"}
+        <div className={styles.wrapper}>
+            <h3 className={styles.title}>
+                {valueType === 'avg_score'
+                    ? 'Score moyen par catégorie et difficulté'
+                    : 'Rapidité moyenne (s) par catégorie et difficulté'}
             </h3>
             <Radar data={data} options={options} />
         </div>
