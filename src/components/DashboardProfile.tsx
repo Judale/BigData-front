@@ -1,5 +1,6 @@
 import styles from '../styles/DashboardProfile.module.css';
 
+
 type DashboardProfileProps = {
     games: any[];
     avg_time_taken?: number;
@@ -7,10 +8,10 @@ type DashboardProfileProps = {
 };
 
 export default function DashboardProfile({
-                                             games,
-                                             avg_time_taken,
-                                             total_words,
-                                         }: DashboardProfileProps) {
+    games,
+    avg_time_taken,
+    total_words,
+}: DashboardProfileProps) {
     const bestScore = games.reduce((max, g) => Math.max(max, g.total_points), 0);
     const scores = games.map((g) => g.total_points);
     const avgScore = scores.length
