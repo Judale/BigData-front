@@ -162,9 +162,9 @@ export default function Profile() {
                         onChange={(e) => setDifficultyFilter(e.target.value)}
                     >
                         <option value="all">Toutes</option>
-                        <option value="easy">Facile</option>
-                        <option value="medium">Moyenne</option>
-                        <option value="hard">Difficile</option>
+                        <option value="easy">Touriste</option>
+                        <option value="medium">Aventurier</option>
+                        <option value="hard">Maître</option>
                     </select>
                 </div>
 
@@ -208,9 +208,9 @@ export default function Profile() {
                         onChange={(e) => setDurationFilter(e.target.value)}
                     >
                         <option value="all">Toutes</option>
-                        <option value="short">Courte (5 dessins)</option>
-                        <option value="medium">Moyenne (10 dessins)</option>
-                        <option value="long">Longue (15 dessins)</option>
+                        <option value="short">Éclair (5 dessins)</option>
+                        <option value="medium">Classique (10 dessins)</option>
+                        <option value="long">Marathon (15 dessins)</option>
                     </select>
                 </div>
             </div>

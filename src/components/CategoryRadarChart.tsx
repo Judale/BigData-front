@@ -20,9 +20,9 @@ ChartJS.register(
 );
 
 const DIFFICULTIES = [
-    { key: 'easy', label: 'Facile', color: '#4CAF50' },
-    { key: 'medium', label: 'Moyenne', color: '#FF9800' },
-    { key: 'hard', label: 'Difficile', color: '#F44336' },
+    { key: 'easy', label: 'Touriste', color: '#4CAF50' },
+    { key: 'medium', label: 'Aventurier', color: '#FF9800' },
+    { key: 'hard', label: 'Maître', color: '#F44336' },
 ];
 
 type Props = {
