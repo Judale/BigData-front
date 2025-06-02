@@ -114,7 +114,7 @@ export default function GamePage() {
 
     const handleRoundEnd = (success: boolean, score: number, g: BackendStartResponse) => {
         setPhase("ROUND_END");
-        setOverlayMsg(success ? `✅ ${g.word} (+${score} pts)` : `❌ Perdu – c'était « ${g.word} »`);
+        setOverlayMsg(success ? `✅ ${g.word} (+${score} pts)` : `❌ Perdu – bah alors on sait pas dessiner ?`);
         setRounds(prev => [...prev, { word: g.word, score }]);
 
         setTimeout(async () => {
