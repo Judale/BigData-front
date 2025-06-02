@@ -1,3 +1,4 @@
+// src/pages/GamePage.tsx (ou .jsx / .tsx selon votre configuration)
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
@@ -37,13 +38,83 @@ const decorElements = [
     { src: getDecorUrl("Bricks 3.svg"), className: styles.bgHeart },
 ];
 
+/**
+ * Table de correspondance anglais → français pour tous les mots
+ */
+const wordTranslations: Record<string, string> = {
+    "airplane":    "avion",
+    "angel":       "ange",
+    "apple":       "pomme",
+    "axe":         "hache",
+    "banana":      "banane",
+    "bridge":      "pont",
+    "cup":         "tasse",
+    "donut":       "beignet",
+    "door":        "porte",
+    "mountain":    "montagne",
+    "bird":        "oiseau",
+    "camel":       "chameau",
+    "cat":         "chat",
+    "cow":         "vache",
+    "crab":        "crabe",
+    "crocodile":   "crocodile",
+    "dolphin":     "dauphin",
+    "elephant":    "éléphant",
+    "fish":        "poisson",
+    "flamingo":    "flamant rose",
+    "hedgehog":    "hérisson",
+    "lion":        "lion",
+    "octopus":     "pieuvre",
+    "pig":         "cochon",
+    "rabbit":      "lapin",
+    "raccoon":     "raton laveur",
+    "rhinoceros":  "rhinocéros",
+    "shark":       "requin",
+    "whale":       "baleine",
+    "alarm clock":   "réveil",
+    "anvil":         "enclume",
+    "backpack":      "sac à dos",
+    "baseball bat":  "batte de baseball",
+    "bed":           "lit",
+    "belt":          "ceinture",
+    "bicycle":       "vélo",
+    "cell phone":    "téléphone portable",
+    "eyeglasses":    "lunettes",
+    "flip flops":    "tongs",
+    "flower":        "fleur",
+    "fork":          "fourchette",
+    "harp":          "harpe",
+    "headphones":    "écouteurs",
+    "hexagon":       "hexagone",
+    "key":           "clé",
+    "knife":         "couteau",
+    "ladder":        "échelle",
+    "birthday_cake": "gâteau d'anniversaire",
+    "blueberry":     "myrtille",
+    "bread":         "pain",
+    "broccoli":      "brocoli",
+    "carrot":        "carotte",
+    "cookie":        "biscuit",
+    "grapes":        "raisins",
+    "hamburger":     "hamburger",
+    "hot dog":       "hot-dog",
+    "ice_cream":     "glace",
+    "lollipop":      "sucette",
+    "mushroom":      "champignon",
+    "pear":          "poire",
+    "pineapple":     "ananas",
+    "pizza":         "pizza",
+    "strawberry":    "fraise",
+    "watermelon":    "pastèque"
+};
+
 export default function GamePage() {
     const navigate = useNavigate();
-    const token = localStorage.getItem("token");
+    const token   = localStorage.getItem("token");
     const user_id = localStorage.getItem("user_id");
 
     const [phase, setPhase] = useState<GamePhase>("SETUP");
-    const [game, setGame] = useState<BackendStartResponse | null>(null);
+    const [game,  setGame]  = useState<BackendStartResponse | null>(null);
     const [rounds, setRounds] = useState<RoundScore[]>([]);
     const [timeLeft, setTimeLeft] = useState(30);
     const [overlayMsg, setOverlayMsg] = useState("");
@@ -101,7 +172,9 @@ export default function GamePage() {
                     if (timerRef.current) clearInterval(timerRef.current);
                     handleRoundEnd(data.status === "recognized", data.score ?? 0, g);
                 } else {
-                    setOverlayMsg(`Essai : ${data.label} (${Math.round(data.proba * 100)}%)`);
+                    // Traduction du label avant affichage
+                    const motLabel = wordTranslations[data.label] ?? data.label;
+                    setOverlayMsg(`Essai : ${motLabel} (${Math.round(data.proba * 100)}%)`);
                 }
             } catch {}
 
@@ -114,17 +187,19 @@ export default function GamePage() {
 
     const handleRoundEnd = (success: boolean, score: number, g: BackendStartResponse) => {
         setPhase("ROUND_END");
-        setOverlayMsg(success ? `✅ ${g.word} (+${score} pts)` : `❌ Perdu – bah alors on sait pas dessiner ?`);
+        const motAffiche = wordTranslations[g.word] ?? g.word;
+        setOverlayMsg(
+            success
+                ? `✅ ${motAffiche} (+${score} pts)`
+                : `❌ Perdu – bah alors on sait pas dessiner ?`
+        );
         setRounds(prev => [...prev, { word: g.word, score }]);
 
         setTimeout(async () => {
             try {
-                // ➜ on utilise l’index courant tel quel
                 const { data } = await api.get<{ word: string | null; round_id: number }>(
                     `/api/next-word/${g.game_id}/${roundIdxRef.current}`
                 );
-
-                // ➜ puis on passe à l’index suivant
                 roundIdxRef.current += 1;
 
                 if (data.word === null) {
@@ -173,8 +248,11 @@ export default function GamePage() {
 
             {(phase === "PLAYING" || phase === "ROUND_END") && game && (
                 <>
-                    <h1 className={styles.word}>Mot: {game.word}</h1>
-                    <p className={styles.timer}>Temps restant: {timeLeft}s</p>
+                    <h1 className={styles.word}>
+                        Mot : {wordTranslations[game.word] ?? game.word}
+                    </h1>
+
+                    <p className={styles.timer}>Temps restant : {timeLeft}s</p>
                     <DrawingCanvas ref={canvasRef} locked={phase !== "PLAYING"} />
                     {phase === "PLAYING" && (
                         <button onClick={resetCanvas} className={styles.clearButton}>
@@ -186,7 +264,7 @@ export default function GamePage() {
             )}
 
             {phase === "FINISHED" && (
-                <RoundSummary rounds={rounds} onRestart={() => setPhase("SETUP")} />
+                    <RoundSummary rounds={rounds} onRestart={() => setPhase("SETUP")} />
             )}
         </div>
     );

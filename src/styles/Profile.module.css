@@ -325,7 +325,15 @@
     gap: 0.8rem;
 }
 
-.wordsRank {
+.wordsListTop .wordsRank {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-right: 0.8rem;
+    width: 28px;
+    text-align: center;
+    color: var(--success-green);
+}
+.wordsListFlop .wordsRank {
     font-weight: bold;
     font-size: 1.2rem;
     margin-right: 0.8rem;
