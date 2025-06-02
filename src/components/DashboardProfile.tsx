@@ -11,7 +11,6 @@ export default function DashboardProfile({
     avg_time_taken,
     total_words,
 }: DashboardProfileProps) {
-    const nbGames = games.length;
     const bestScore = games.reduce((max, g) => Math.max(max, g.total_points), 0);
     const scores = games.map(g => g.total_points);
     const avgScore = scores.length ? (scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
