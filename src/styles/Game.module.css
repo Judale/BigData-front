@@ -343,3 +343,83 @@
 .clearButton:hover {
     background-color: #e6951e;
 }
+
+.gameContainer {
+    position: relative;
+    min-height: 400px;
+}
+
+.svgBubbleWrapper {
+    position: absolute;
+    top: 0;
+    left: -80%;
+}
+
+.speechBubble {
+    position: absolute;
+    top: -10px;         /* légèrement au-dessus du SVG */
+    left: 50%;          /* centré horizontalement par rapport au SVG */
+    transform: translateX(-50%);
+    background-color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 2px solid #333;
+    font-size: 0.9rem;
+    line-height: 1.2;
+    max-width: 200px;
+    text-align: center;
+    z-index: 10;
+}
+
+.speechBubble::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px 8px 0 8px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+    width: 0;
+    height: 0;
+}
+
+.speechBubble::before {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 9px 9px 0 9px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+    width: 0;
+    height: 0;
+    z-index: -1;
+}
+
+.highlightWord {
+    color: #259afa;
+    font-weight: bold;
+}
+
+/* Classe pour mettre en avant le score */
+.highlightScore {
+    color: #faa725;
+    font-weight: bold;
+}
+
+/* Classe pour mettre en avant la probabilité (facultatif) */
+.highlightProb {
+    color: #e63946;
+    font-weight: bold;
+}
+
+.speechBubbleSuccess {
+    background-color: #ABE6D0;
+}
+
+/* Quand la réponse est fausse */
+.speechBubbleFailure {
+    background-color: #FB8CA1;
+}
