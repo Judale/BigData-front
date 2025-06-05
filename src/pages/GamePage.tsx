@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
-import styles from "../styles/Game.module.css";
+import styles from "../styles/Game.module.css"; // si vous utilisez un CSS module commun
 import GameSetup from "../components/Game/GameSetup";
 import DrawingCanvas from "../components/Game/DrawingCanvas";
 import RoundSummary from "../components/Game/RoundSummary";
@@ -38,9 +38,7 @@ const decorElements = [
     { src: getDecorUrl("Bricks 3.svg"), className: styles.bgHeart },
 ];
 
-/**
- * Table de correspondance anglais → français pour tous les mots
- */
+// Dictionnaire anglais → français
 const wordTranslations: Record<string, string> = {
     airplane: "avion",
     angel: "ange",
@@ -108,11 +106,7 @@ const wordTranslations: Record<string, string> = {
     watermelon: "pastèque",
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Listes de répliques trash & sarcastiques (4–5 par cas)
-// ─────────────────────────────────────────────────────────────────────────────
-
-// 1) Quand le robot propose un essai de reconnaissance :
+// Répliques trash / sarcastiques…
 const guessResponses = [
     "Tu appelles ça un {{word}} à {{prob}} % ? Même mon capteur de poussière est plus précis.",
     "Un magnifique glitch visuel… {{word}} à {{prob}} % ? Mon dernier reboot aurait deviné mieux.",
@@ -121,7 +115,6 @@ const guessResponses = [
     "« {{word}} » à {{prob}} % ? On dirait un artefact d’écran cassé, pas un dessin.",
 ];
 
-// 2) Quand le robot a enfin reconnu la forme (succès) :
 const successResponses = [
     "Oh tiens, un vrai {{word}}… si on exclut la corruption des données. +{{score}} pts, je suppose.",
     "Bravo, tu m’as forcé à reconnaître {{word}}… +{{score}} pts. C’est un miracle de stabilité électronique.",
@@ -130,7 +123,6 @@ const successResponses = [
     "Félicitations, {{word}} validé. +{{score}} pts. J’aurais presque envie de formater mon système en ton honneur.",
 ];
 
-// 3) Quand le robot échoue (échec au bout du temps ou impossible à reconnaître) :
 const failureResponses = [
     "Error 404 : dessin {{word}} non trouvé. Ton œuvre est en grève.",
     "Kernel panic artistique… impossible de détecter ton {{word}}. Tu viens de noyer mon processeur.",
@@ -139,7 +131,6 @@ const failureResponses = [
     "Je suis tombé en boucle infinie en analysant ton ‘gribouillis’. Ton {{word}} reste mystère.",
 ];
 
-// 4) Quand un nouveau mot est envoyé pour démarrer le round suivant :
 const newWordResponses = [
     "Nouveau challenge : ça fait bugger mon scanner rien que d’y penser.",
     "Encore un mot ? Mon processeur va me cracher dessus si tu continues.",
@@ -148,9 +139,6 @@ const newWordResponses = [
     "Cool, un autre round pour tester la _tolérance aux crashes_ de mon algorithme.",
 ];
 
-// ─────────────────────────────────────────────────────────────────────────────
-// **Nouvelle** liste de « phrases d’attente » pour >2 mêmes guesses consécutifs
-// ─────────────────────────────────────────────────────────────────────────────
 const waitingResponses = [
     "Je suis toujours en train d’analyser… Patience, mes circuits cogitent.",
     "Encore en cours d’analyse. Un instant, j’optimise mes algorithmes.",
@@ -196,14 +184,9 @@ export default function GamePage() {
     const [rounds, setRounds] = useState<RoundScore[]>([]);
     const [timeLeft, setTimeLeft] = useState(30);
 
-    // Permet de piloter la position du SVG (pos1 / pos2 / pos3)
     type SvgPosition = "pos1" | "pos2" | "pos3";
     const [svgPos, setSvgPos] = useState<SvgPosition>("pos1");
-
-    // Texte affiché dans la bulle de dialogue
     const [bubbleText, setBubbleText] = useState("");
-
-    // Variante de style pour la bulle : "" | "success" | "failure"
     const [bubbleVariant, setBubbleVariant] = useState<"" | "success" | "failure">(
         ""
     );
@@ -221,9 +204,7 @@ export default function GamePage() {
     );
     const roundIdxRef = useRef(0);
 
-    // ─────────────────────────────────────────────────────────────────────────────
-    // **NOUVEAU : ref pour mémoriser le dernier mot deviné & ses occurrences**
-    // ─────────────────────────────────────────────────────────────────────────────
+    // Mémoriser le dernier mot deviné & son nombre d’occurrences consécutives
     const lastGuessRef = useRef<{
         word: string;
         count: number;
@@ -244,17 +225,13 @@ export default function GamePage() {
             resetCanvas();
             setRounds([]);
             roundIdxRef.current = 0;
-
-            // Réinitialiser le suivi des guesses à chaque nouveau round
             lastGuessRef.current = null;
 
             setGame(data);
             setPhase("PLAYING");
-
-            // Début du quiz
             setSvgPos("pos1");
             setBubbleText("Démarrage du quiz…");
-            setBubbleVariant(""); // bulle neutre
+            setBubbleVariant("");
             startTimer(data);
         } catch {
             navigate("/login");
@@ -273,13 +250,17 @@ export default function GamePage() {
             if (!strokes) return;
 
             try {
-                const { data } = await api.post("/api/submit-drawing", {
-                    round_id: g.round_id,
-                    ndjson: { drawing: strokes },
-                    elapsed_time: elapsed,
-                }, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
+                const { data } = await api.post(
+                    "/api/submit-drawing",
+                    {
+                        round_id: g.round_id,
+                        ndjson: { drawing: strokes },
+                        elapsed_time: elapsed,
+                    },
+                    {
+                        headers: { Authorization: `Bearer ${token}` },
+                    }
+                );
 
                 const finished = data.status === "recognized" || elapsed >= 30;
                 if (finished) {
@@ -290,23 +271,17 @@ export default function GamePage() {
                     handleRoundEnd(isRecognized, score, g);
                     return;
                 } else {
-                    // ─────────────────────────────────────────────────────────────────────
-                    // Tant que le round n'est pas fini : on gère les réponses "guess"
-                    // ─────────────────────────────────────────────────────────────────────
-
+                    // Tant que le round n’est pas fini : on gère les “guesses”
                     const labelAnglais = data.label;
                     const motLabel = wordTranslations[labelAnglais] ?? labelAnglais;
                     const probaPourc = Math.round(data.proba * 100);
 
-                    // Vérifier si c'est le même mot que le tour précédent
                     if (
                         lastGuessRef.current &&
                         lastGuessRef.current.word === labelAnglais
                     ) {
-                        // Même mot consécutif
                         lastGuessRef.current.count += 1;
                     } else {
-                        // Nouveau mot (ou première occurrence)
                         lastGuessRef.current = {
                             word: labelAnglais,
                             count: 1,
@@ -316,7 +291,6 @@ export default function GamePage() {
 
                     let texte: string;
                     if (lastGuessRef.current.count === 1) {
-                        // Première occurrence : tirer une phrase aléatoire
                         const template = getRandomElement(guessResponses);
                         lastGuessRef.current.template = template;
                         texte = formatTemplate(template, {
@@ -324,22 +298,19 @@ export default function GamePage() {
                             prob: probaPourc,
                         });
                     } else if (lastGuessRef.current.count === 2) {
-                        // Deuxième occurrence consécutive : réutiliser la même phrase
                         const template = lastGuessRef.current.template;
                         texte = formatTemplate(template, {
                             word: motLabel,
                             prob: probaPourc,
                         });
                     } else {
-                        // count > 2 : phrase d'attente
                         const waitingTemplate = getRandomElement(waitingResponses);
-                        // Ici, pas besoin de variables dynamiques, donc on peut afficher directement
                         texte = waitingTemplate;
                     }
 
                     setSvgPos("pos1");
                     setBubbleText(texte);
-                    setBubbleVariant(""); // bulle neutre pendant les guesses
+                    setBubbleVariant("");
                 }
             } catch {
                 // silence en cas d’erreur réseau
@@ -356,7 +327,6 @@ export default function GamePage() {
         const motAffiche = wordTranslations[g.word] ?? g.word;
 
         if (success) {
-            // Succès : réplique trash parmi successResponses
             const template = getRandomElement(successResponses);
             const texte = formatTemplate(template, {
                 word: motAffiche,
@@ -366,7 +336,6 @@ export default function GamePage() {
             setBubbleText(texte);
             setBubbleVariant("success");
         } else {
-            // Échec : réplique trash parmi failureResponses
             const template = getRandomElement(failureResponses);
             const texte = formatTemplate(template, {
                 word: motAffiche,
@@ -395,11 +364,8 @@ export default function GamePage() {
                         word: data.word,
                     };
                     resetCanvas();
-
-                    // Réinitialiser le suivi des guesses à chaque nouveau round
                     lastGuessRef.current = null;
 
-                    // Avant de repartir sur le round suivant, on réinitialise la bulle
                     setBubbleVariant("");
                     const template = getRandomElement(newWordResponses);
                     const texte2 = formatTemplate(template, {});
@@ -425,7 +391,7 @@ export default function GamePage() {
             );
             setPhase("FINISHED");
             setBubbleText(`🎉 Partie terminée ! Score total : ${data.total_points}`);
-            setBubbleVariant(""); // bulle neutre à la fin
+            setBubbleVariant("");
             setGame(null);
             if (timerRef.current) clearInterval(timerRef.current);
         } catch {
@@ -481,12 +447,15 @@ export default function GamePage() {
                         </div>
 
                         <div className={styles.canvasArea}>
+                            <button
+                                onClick={resetCanvas}
+                                className={styles.clearButton}
+
+                            >
+                                Effacer le dessin
+                            </button>
                             <DrawingCanvas ref={canvasRef} locked={phase !== "PLAYING"} />
-                            {phase === "PLAYING" && (
-                                <button onClick={resetCanvas} className={styles.clearButton}>
-                                    Effacer le dessin
-                                </button>
-                            )}
+
                         </div>
                     </div>
                 </>
